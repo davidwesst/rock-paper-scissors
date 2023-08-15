@@ -3,7 +3,7 @@
 //  A game by David Wesst, based on implementation from Riskpeep
 //  Reference: https://www.riskpeep.com/2022/07/rock-paper-scissors.html
 
-use std::{fmt::{self, write},io};
+use std::{fmt::{self},io};
 use rand::{self, Rng, distributions::{Distribution, Standard}};
 
 enum RPSChoice {
@@ -34,6 +34,23 @@ impl fmt::Display for RPSChoice {
     }
 }
 
+#[derive(Debug)]
+enum RPSChoiceError {
+    Unknown(String),
+}
+
+impl core::str::FromStr for RPSChoice {
+    type Err = RPSChoiceError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "r" | "rock"    => Ok(RPSChoice::Rock),
+            "p" | "paper"   => Ok(RPSChoice::Paper),
+            "s" | "scissors"=> Ok(RPSChoice::Scissors),
+            _ => Err(RPSChoiceError::Unknown(s.to_string())),
+        }
+    }
+}
+
 fn main() {
     println!("Let's play Rock, Paper, Scissors!");
     println!("Select (r)ock, (p)aper, or (s)cissors");
@@ -43,6 +60,9 @@ fn main() {
     io::stdin()
         .read_line(&mut player_move)
         .expect("Failed to read input");
+
+    let player_move : RPSChoice = 
+        player_move.trim().parse().expect("This is not a valid option.");
 
     println!("You guessed {player_move}");
 
