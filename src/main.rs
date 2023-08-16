@@ -121,20 +121,34 @@ fn main() {
     println!("Let's play Rock, Paper, Scissors!");
     println!("Select (r)ock, (p)aper, or (s)cissors");
 
-    let mut player_move = String::new();
-
-    io::stdin()
-        .read_line(&mut player_move)
-        .expect("Failed to read input");
-
-    let player_move : RPSChoice = 
-        player_move.trim().parse().expect("This is not a valid option.");
-
-    println!("You guessed {player_move}");
-
     let cpu_move: RPSChoice = rand::thread_rng().gen();
-    println!("I guessed {cpu_move}");
 
-    let result: RPSResult = player_move.compare(&cpu_move);
-    println!("{}", result);
+    loop {
+        let mut player_move = String::new();
+
+        io::stdin()
+            .read_line(&mut player_move) 
+            .expect("Failed to read input");
+
+
+        let player_move : Result<RPSChoice, RPSChoiceError> = player_move.trim().parse();
+        let player_move = match player_move {
+            Ok(player_move_val) => {
+                // OK
+                println!("");
+                println!("You guessed {player_move_val}");
+                println!("I guessed {cpu_move}");
+                player_move_val
+            }
+            Err(RPSChoiceError::Unknown(s)) => {
+                // Err
+                println!("WTF dude?! {s} is not an option. Try again.");
+                continue
+            }
+        };
+
+        let result: RPSResult = player_move.compare(&cpu_move);
+        println!("{}", result);
+        break;
+    }
 }
