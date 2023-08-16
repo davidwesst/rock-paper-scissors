@@ -122,10 +122,12 @@ fn main() {
     println!("Let's play Rock, Paper, Scissors!");
     println!("Best 3 out of 5, okay?");
 
+    let mut quit = false;
+
     let mut player_wins = 0;
     let mut cpu_wins = 0;
 
-    loop { // game 
+    'game: loop { // game 
 
         loop { // round
             println!("Select (r)ock, (p)aper, or (s)cissors");
@@ -149,8 +151,17 @@ fn main() {
                 }
                 Err(RPSChoiceError::Unknown(s)) => {
                     // Err
-                    println!("WTF dude?! {s} is not an option. Try again.");
-                    continue
+                    match &s[..] {
+                        "q" | "quit" => {
+                            println!("Quitting...");
+                            quit = true;
+                            break 'game;
+                        },
+                        _ => {
+                            println!("WTF dude?! {s} is not an option. Try again.");
+                            continue
+                        }
+                    }
                 }
             };
 
@@ -184,4 +195,9 @@ fn main() {
         }
         break;
     }
+
+    if quit == true {
+        println!("Thanks for playing! Hope to see you again soon. 🙂");
+    }
+
 }
