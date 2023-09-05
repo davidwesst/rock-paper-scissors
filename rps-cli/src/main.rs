@@ -6,7 +6,7 @@
 use std::io;
 use rand::{self, Rng};
 
-mod rps;
+use rps;
 use rps::choice::{RPSChoice, RPSChoiceError};
 use rps::compare::Compare;
 use rps::result::RPSResult;
