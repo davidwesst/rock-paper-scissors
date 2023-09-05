@@ -2,6 +2,7 @@ use std::fmt::{self};
 
 use super::compare::RPSCompare;
 
+#[derive(Debug, PartialEq)]
 pub enum RPSResult {
     Win(RPSCompare),
     Loss(RPSCompare),

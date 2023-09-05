@@ -78,3 +78,101 @@ impl Compare<RPSChoice, RPSResult> for RPSChoice {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rock_loses_to_paper() {
+        // given
+        let rock_choice: RPSChoice = RPSChoice::Rock;
+
+        // when
+        let actual: RPSResult = rock_choice.compare(&RPSChoice::Paper);
+
+        // then
+        let expected: RPSResult = RPSResult::Loss(RPSCompare::PaperCoversRock);
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rock_ties_on_rock() {
+        let rock_choice: RPSChoice = RPSChoice::Rock;
+
+        let actual: RPSResult = rock_choice.compare(&RPSChoice::Rock);
+
+        let expected: RPSResult = RPSResult::Tie();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn rock_wins_on_scissors() {
+        let rock_choice: RPSChoice = RPSChoice::Rock;
+
+        let actual: RPSResult = rock_choice.compare(&RPSChoice::Scissors);
+
+        let expected: RPSResult = RPSResult::Win(RPSCompare::RockCrushesScissors);
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn paper_loses_to_scissors() {
+        let paper_choice: RPSChoice = RPSChoice::Paper;
+
+        let actual: RPSResult = paper_choice.compare(&RPSChoice::Scissors);
+
+        let expected: RPSResult = RPSResult::Loss(RPSCompare::ScissorsCutsPaper);
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn paper_ties_on_paper() {
+        let paper_choice: RPSChoice = RPSChoice::Paper;
+
+        let actual: RPSResult = paper_choice.compare(&RPSChoice::Paper);
+
+        let expected: RPSResult = RPSResult::Tie();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn paper_wins_on_rock() {
+        let paper_choice: RPSChoice = RPSChoice::Paper;
+
+        let actual: RPSResult = paper_choice.compare(&RPSChoice::Rock);
+
+        let expected: RPSResult = RPSResult::Win(RPSCompare::PaperCoversRock);
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn scissors_loses_to_rock() {
+        let scissors_choice: RPSChoice = RPSChoice::Scissors;
+
+        let actual: RPSResult = scissors_choice.compare(&RPSChoice::Rock);
+
+        let expected: RPSResult = RPSResult::Loss(RPSCompare::RockCrushesScissors);
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn scissors_ties_on_scissors() {
+        let scissors_choice: RPSChoice = RPSChoice::Scissors;
+
+        let actual: RPSResult = scissors_choice.compare(&RPSChoice::Scissors);
+
+        let expected: RPSResult = RPSResult::Tie();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn scissors_wins_on_paper() {
+        let scissors_choice: RPSChoice = RPSChoice::Scissors;
+
+        let actual: RPSResult = scissors_choice.compare(&RPSChoice::Paper);
+
+        let expected: RPSResult = RPSResult::Win(RPSCompare::ScissorsCutsPaper);
+        assert_eq!(expected, actual);
+
+    }
+}
