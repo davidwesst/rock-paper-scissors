@@ -7,9 +7,11 @@ use rps::choice::{RPSChoice, RPSChoiceError};
 use rps::compare::Compare;
 use rps::result::RPSResult;
 
-pub fn run_interactive_mode() {
+use super::RPSArgs;
+
+pub fn run_interactive_mode(args: &RPSArgs) {
     println!("Let's play Rock, Paper, Scissors!");
-    println!("Best 3 out of 5, okay?");
+    println!("First one to win {} takes it all, okay?", args.win_count);
 
     let mut quit = false;
 
@@ -71,10 +73,10 @@ pub fn run_interactive_mode() {
                 }
             }
             
-            if player_wins == 3 {
+            if player_wins == args.win_count {
                 println!("\nCongratulations! You won the game.");
                 break;
-            } else if cpu_wins == 3 {
+            } else if cpu_wins == args.win_count {
                 println!("\nOh snap! You lost sucka! Better luck next time.");
                 break;
             } else {
