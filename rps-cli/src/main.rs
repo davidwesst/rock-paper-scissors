@@ -1,6 +1,7 @@
 use clap::Parser;
 
 use std::io;
+use std::time::{Instant, Duration};
 use rand::{self, Rng};
 
 use rps;
@@ -57,18 +58,19 @@ fn read_player_input() -> RPSChoice {
 }
 
 fn main() {
+    let game_timer: Instant = Instant::now();
+
     let args: RPSArgs = RPSArgs::parse();
 
-    let mut quit = false;
     let mut player_wins = 0;
     let mut cpu_wins = 0;
+    let mut tie_count: usize = 0;
 
     if !args.non_interactive {
         print_game_start_message(&args);
     }
 
-    'game: loop { // game 
-
+    loop { // game 
         loop { // round
             if !args.non_interactive {
                 print_round_start_message();
@@ -82,6 +84,9 @@ fn main() {
                 player_move = rand::thread_rng().gen();
             }
             let cpu_move: RPSChoice = rand::thread_rng().gen();
+            if !args.non_interactive {
+                print_round_summary_message(&player_move, &cpu_move);
+            }
 
             let result: RPSResult = player_move.compare(&cpu_move);
             if !args.non_interactive {
@@ -95,13 +100,17 @@ fn main() {
                     cpu_wins += 1;
                 },
                 RPSResult::Tie() => { 
-                    // do nothing on a tie 
+                    tie_count += 1;
                 }
             }
 
             if player_wins == args.win_count || cpu_wins == args.win_count {
+                let game_duration: Duration = game_timer.elapsed();
                 if !args.non_interactive {
-                    print_game_over_message(&player_wins, &cpu_wins);
+                    print_game_over_message(&player_wins, &cpu_wins, &tie_count, &game_duration); 
+                }
+                else {
+                    print_game_over_message(&player_wins, &cpu_wins, &tie_count, &game_duration);
                 }
                 break;
             }
@@ -112,12 +121,6 @@ fn main() {
             }
         }
         break;
-    }
-
-    if quit == true {
-        if !args.non_interactive {
-            print_game_exit_message();
-        }
     }
 
 }

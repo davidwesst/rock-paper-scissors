@@ -1,4 +1,6 @@
 
+use std::time::Duration;
+
 use rps;
 use rps::choice::RPSChoice;
 use rps::result::RPSResult;
@@ -23,7 +25,7 @@ pub fn print_round_result_message(result: &RPSResult) {
     println!("{}", result);
 }
 
-pub fn print_game_over_message(p1_score:&usize, p2_score:&usize) {
+pub fn print_game_over_message(p1_score:&usize, p2_score:&usize, tie_count:&usize, game_duration: &Duration) {
     if p1_score > p2_score {
         println!("You win!");
     }
@@ -33,6 +35,9 @@ pub fn print_game_over_message(p1_score:&usize, p2_score:&usize) {
     else {
         println!("It's a draw. You should play again so I can beat you. 😊");
     }
+
+    println!("\n---- FINAL SCORE ----\nP1 (You): {}\nP2 (CPU): {}\nTies: {}", p1_score, p2_score, tie_count);
+    println!("\nGame lasted {} seconds and had {} rounds.", game_duration.as_secs(), p1_score + p2_score + tie_count);
 }
 
 pub fn print_game_summary_message(p1_score:&usize, p2_score:&usize) {
@@ -40,6 +45,7 @@ pub fn print_game_summary_message(p1_score:&usize, p2_score:&usize) {
     print!("Again. :) ")
 }
 
+#[allow(dead_code)]
 pub fn print_game_exit_message() {
     println!("Quitting the game...");
     println!("Thanks for playing! Hope to see you again soon. 🙂");
