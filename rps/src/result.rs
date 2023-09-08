@@ -26,7 +26,7 @@ impl fmt::Display for RPSResult {
                     RPSCompare::RockCrushesScissors => write!(f, "You lose...Rock crushes scissors!")
                 }
             },
-            RPSResult::Tie() => write!(f, ""),
+            RPSResult::Tie() => write!(f, "Tie."),
         }
     }
 }

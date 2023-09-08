@@ -1,94 +1,50 @@
 
-use std::io;
-use rand::{self, Rng};
-
 use rps;
-use rps::choice::{RPSChoice, RPSChoiceError};
-use rps::compare::Compare;
+use rps::choice::RPSChoice;
 use rps::result::RPSResult;
 
 use super::RPSArgs;
 
-pub fn run_interactive_mode(args: &RPSArgs) {
+pub fn print_game_start_message(args: &RPSArgs) {
     println!("Let's play Rock, Paper, Scissors!");
     println!("First one to win {} takes it all, okay?", args.win_count);
+}
 
-    let mut quit = false;
+pub fn print_round_start_message() {
+    println!("Select (r)ock, (p)aper, or (s)cissors");
+}
 
-    let mut player_wins = 0;
-    let mut cpu_wins = 0;
+pub fn print_round_summary_message(p1_move: &RPSChoice, p2_move: &RPSChoice) {
+    println!("\nYou guessed {p1_move}");
+    println!("I guessed {p2_move}");
+}
 
-    'game: loop { // game 
+pub fn print_round_result_message(result: &RPSResult) {
+    println!("{}", result);
+}
 
-        loop { // round
-            println!("Select (r)ock, (p)aper, or (s)cissors");
-            let cpu_move: RPSChoice = rand::thread_rng().gen();
-
-            let mut player_move = String::new();
-
-            io::stdin()
-                .read_line(&mut player_move) 
-                .expect("Failed to read input");
-
-
-            let player_move : Result<RPSChoice, RPSChoiceError> = player_move.trim().parse();
-            let player_move = match player_move {
-                Ok(player_move_val) => {
-                    // OK
-                    println!("");
-                    println!("You guessed {player_move_val}");
-                    println!("I guessed {cpu_move}");
-                    player_move_val
-                }
-                Err(RPSChoiceError::Unknown(s)) => {
-                    // Err
-                    match &s[..] {
-                        "q" | "quit" => {
-                            println!("Quitting...");
-                            quit = true;
-                            break 'game;
-                        },
-                        _ => {
-                            println!("WTF dude?! {s} is not an option. Try again.");
-                            continue
-                        }
-                    }
-                }
-            };
-
-            let result: RPSResult = player_move.compare(&cpu_move);
-            println!("{}", result);
-
-            match result {
-                RPSResult::Win(_) => {
-                    player_wins += 1;
-                    println!("You win this round.");
-                },
-                RPSResult::Loss(_) => {
-                    cpu_wins += 1;
-                    println!("I win this round");
-                },
-                RPSResult::Tie() => {
-                    println!("Tied round...no points.")
-                }
-            }
-            
-            if player_wins == args.win_count {
-                println!("\nCongratulations! You won the game.");
-                break;
-            } else if cpu_wins == args.win_count {
-                println!("\nOh snap! You lost sucka! Better luck next time.");
-                break;
-            } else {
-                println!("You have {player_wins} points and I have {cpu_wins} points.\n");
-                print!("Again. :) ")
-            }
-        }
-        break;
+pub fn print_game_over_message(p1_score:&usize, p2_score:&usize) {
+    if p1_score > p2_score {
+        println!("You win!");
     }
-
-    if quit == true {
-        println!("Thanks for playing! Hope to see you again soon. 🙂");
+    else if p2_score > p1_score {
+        println!("Oh snap! I win!");
     }
+    else {
+        println!("It's a draw. You should play again so I can beat you. 😊");
+    }
+}
 
+pub fn print_game_summary_message(p1_score:&usize, p2_score:&usize) {
+    println!("You have {p1_score} points and I have {p2_score} points.\n");
+    print!("Again. :) ")
+}
+
+pub fn print_game_exit_message() {
+    println!("Quitting the game...");
+    println!("Thanks for playing! Hope to see you again soon. 🙂");
+}
+
+pub fn print_invalid_input_message(s: &String) {
+    println!("WTF dude?! {s} is not an option. Try again.");
 }
