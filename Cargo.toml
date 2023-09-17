@@ -2,4 +2,6 @@
 members = [
     "rps",
     "rps-cli",
+    "rps-game"
 ]
+resolver = "2"
